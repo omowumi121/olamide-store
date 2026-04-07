@@ -1,6 +1,6 @@
 "use client";
 
-import { AuthProvider } from '@omowunmi/auth-sdk';
+import { AuthProvider } from "../app/auth-sdk/auth-sdk-package";
 
 export function Providers({ children }: { children: React.ReactNode }) {
   const authConfig = {

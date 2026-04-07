@@ -1,6 +1,6 @@
 "use client";
 import { Home, LayoutDashboard, ShoppingBag, CreditCard, Box, PieChart, Settings, LogOut } from "lucide-react";
-import { useAuth } from "@omowunmi/auth-sdk";
+import { useAuth } from "../../auth-sdk/auth-sdk-package";
 
 export default function Sidebar() {
   const { logout } = useAuth();

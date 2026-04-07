@@ -84,7 +84,7 @@
 "use client";
 
 import { useState, useEffect } from "react"; // Added useEffect
-import { useAuth } from "@omowunmi/auth-sdk";
+import { useAuth } from "./auth-sdk/auth-sdk-package";
 import { useRouter } from "next/navigation"; // Added for redirection
 
 export default function LoginPage() {

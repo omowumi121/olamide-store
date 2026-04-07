@@ -1,0 +1,14 @@
+# Auth-SDK
+
+A lightweight, high-performance Authentication SDK designed for Next.js applications communicating with Go backends. This SDK handles JWT storage, session hydration, and provides a clean React Context for global auth state.
+
+## 🚀 Features
+- **Next.js Optimized:** Works seamlessly with App Router and `use client` directives.
+- **Secure Token Management:** Automatic handling of JWTs in LocalStorage.
+- **Route Protection Ready:** Easily protect your Dashboard or Profile pages.
+- **Swagger Compatible:** Designed to match standard Go/Echo/Gin API structures.
+
+## 📦 Installation
+
+```bash
+npm install your-username/auth-sdk

@@ -1,0 +1,36 @@
+{
+  "name": "@omowunmi/auth-sdk",
+  "version": "1.0.0",
+  "description": "Lightweight Auth SDK for Next.js and Go",
+  "main": "./dist/index.js",
+  "module": "./dist/index.mjs",
+  "types": "./dist/index.d.ts",
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "build": "tsup src/index.ts --format cjs,esm --dts --clean",
+    "dev": "tsup src/index.ts --format cjs,esm --watch --dts",
+    "lint": "tsc"
+  },
+  "keywords": [
+    "auth",
+    "nextjs",
+    "go",
+    "sdk"
+  ],
+  "author": "omowunmi",
+  "license": "ISC",
+  "peerDependencies": {
+    "react": "^18.0.0 || ^19.0.0",
+    "react-dom": "^18.0.0 || ^19.0.0"
+  },
+  "devDependencies": {
+    "@types/react": "^19.0.0",
+    "@types/react-dom": "^19.0.0",
+    "react": "^19.0.0",
+    "react-dom": "^19.0.0",
+    "tsup": "^8.5.1",
+    "typescript": "^5.9.3"
+  }
+}

@@ -1,0 +1,17 @@
+ Dependency directories
+node_modules/
+
+# Build output (This is where your compiled JS lives)
+dist/
+
+# Logs
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# OS metadata
+.DS_Store
+Thumbs.db
+
+# TypeScript info
+*.tsbuildinfo

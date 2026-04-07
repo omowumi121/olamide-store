@@ -1,44 +1,24 @@
-// "use client";
-
-// import { useAuth } from "@omowunmi/auth-sdk";
-// import { useRouter } from "next/navigation";
-// import { useEffect } from "react";
-
-// export default function POSLayout({ children }: { children: React.ReactNode }) {
-//   const { user, loading } = useAuth();
-//   const router = useRouter();
-
-//   useEffect(() => {
-//     // If auth check is finished and no user is found, kick back to login
-//     if (!loading && !user?.authenticated) {
-//       router.push("/");
-//     }
-//   }, [user, loading, router]);
-
-//   if (loading) {
-//     return (
-//       <div className="h-screen w-full flex items-center justify-center bg-gray-50">
-//         <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600"></div>
-//       </div>
-//     );
-//   }
-
-//   // Only render if authenticated
-//   return user?.authenticated ? <>{children}</> : null;
-// }
-
 "use client";
 import { ReactNode, useState, useEffect, cloneElement, isValidElement } from "react";
-import { useAuth } from "@omowunmi/auth-sdk";
+// Import both useAuth and the AuthProvider from your local SDK
+import { useAuth, AuthProvider } from "../auth-sdk/auth-sdk-package"; 
 import { useRouter } from "next/navigation";
 import Sidebar from "./ui/Sidebar";
 import Header from "./ui/Header";
 
 export default function POSLayout({ children }: { children: ReactNode }) {
+  return (
+    /* 1. Wrap everything in AuthProvider to fix the preredering error */
+    <AuthProvider>
+      <POSLayoutContent>{children}</POSLayoutContent>
+    </AuthProvider>
+  );
+}
+
+// Move the logic into a sub-component so it can access the Auth context
+function POSLayoutContent({ children }: { children: ReactNode }) {
   const { user, loading } = useAuth();
   const router = useRouter();
-  
-  // Lifted search state
   const [searchTerm, setSearchTerm] = useState("");
 
   useEffect(() => {
@@ -55,11 +35,11 @@ export default function POSLayout({ children }: { children: ReactNode }) {
       <Sidebar />
       
       <main className="flex-1 flex flex-col p-6 overflow-hidden">
-        {/* Pass state to Header to fix TypeScript Error */}
+        {/* 2. Header props are now satisfied, clearing the Type Error */}
         <Header searchTerm={searchTerm} setSearchTerm={setSearchTerm} />
         
         <div className="flex flex-1 overflow-hidden">
-          {/* Pass searchTerm down to the page component */}
+          {/* 3. Inject searchTerm into child pages */}
           {isValidElement(children) 
             ? cloneElement(children as any, { searchTerm }) 
             : children}

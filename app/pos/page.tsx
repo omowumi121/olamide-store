@@ -193,6 +193,7 @@
 import { useState } from "react";
 import MenuGrid from "./ui/MenuGrid";
 import BillSidebar from "./ui/BillSidebar";
+import { useAuth } from "../auth-sdk/auth-sdk-package";
 
 interface POSPageProps {
   searchTerm?: string;

@@ -1,136 +1,106 @@
-// "use client";
-// import { Plus } from "lucide-react";
-// import Image from "next/image";
-// import { MENU_ITEMS, CATEGORIES } from "../data";
-
-// export default function MenuGrid({ activeCategory, setActiveCategory, addToCart }: any) {
-//   return (
-//     <div className="flex-1 flex flex-col h-full bg-white overflow-hidden">
-//       {/* SECTION 1: Sticky Categories */}
-//       <div className="p-8 pb-4 bg-white z-20"> 
-//         <div className="flex gap-4 mb-6 overflow-x-auto no-scrollbar">
-//           {CATEGORIES.map((cat) => (
-//             <button
-//               key={cat}
-//               onClick={() => setActiveCategory(cat)}
-//               className={`flex flex-col items-center justify-center min-w-[100px] py-3 px-4 rounded-2xl border transition-all ${
-//                 activeCategory === cat 
-//                   ? "bg-[#244F61] text-white border-[#244F61] shadow-md" 
-//                   : "bg-white border-[#D9EAF3] text-gray-500 hover:border-[#6297A1]"
-//               }`}
-//             >
-//               <span className="text-[10px] font-black uppercase tracking-widest">{cat}</span>
-//             </button>
-//           ))}
-//         </div>
-//         <h2 className="text-2xl font-black text-[#1B3B48]">Choose Items</h2>
-//       </div>
-
-//       {/* SECTION 2: Responsive Grid */}
-//       <div className="flex-1 overflow-y-auto px-8 pb-10 no-scrollbar">
-//         {/* Forces 3 columns on large screens to show more items at once */}
-//         <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
-//           {MENU_ITEMS.filter(i => activeCategory === "All" || i.category === activeCategory).map((item) => (
-//             <div key={item.id} className="group bg-white border border-[#6297A1]/10 rounded-[32px] p-5 hover:shadow-xl transition-all flex flex-col items-center text-center">
-              
-//               <div className="relative w-28 h-28 mb-3">
-//                 <Image 
-//                   src={item.image} 
-//                   alt={item.name} 
-//                   fill 
-//                   className="object-contain group-hover:scale-110 transition-transform" 
-//                 />
-//               </div>
-              
-//               <h3 className="font-bold text-base text-[#1B3B48] mb-1 truncate w-full">{item.name}</h3>
-//               <p className="text-[10px] text-gray-400 mb-4 leading-tight line-clamp-2">
-//                 Freshly prepared with premium local ingredients.
-//               </p>
-              
-//               <div className="w-full flex justify-between items-center mt-auto">
-//                 <span className="text-lg font-black text-[#1B3B48]">₦{item.price.toLocaleString()}</span>
-//                 <button 
-//                   onClick={() => addToCart(item)}
-//                   className="bg-[#1B3B48] text-white p-2 rounded-xl hover:bg-[#6297A1] shadow-lg active:scale-90 transition-all"
-//                 >
-//                   <Plus size={20} />
-//                 </button>
-//               </div>
-//             </div>
-//           ))}
-//         </div>
-//       </div>
-//     </div>
-//   );
-// }
-
-
-
 "use client";
 import { Plus } from "lucide-react";
 import Image from "next/image";
-import { MENU_ITEMS, CATEGORIES } from "../data";
+import { CATEGORIES, Product } from "../data";
 
-export default function MenuGrid({ activeCategory, setActiveCategory, addToCart, searchTerm }: any) {
-  
-  // Logic to filter items by BOTH Category and Search Text
-  const filteredItems = MENU_ITEMS.filter((item) => {
+interface MenuGridProps {
+  activeCategory: string;
+  setActiveCategory: (cat: string) => void;
+  addToCart: (item: Product) => void;
+  searchTerm: string;
+  inventory: Product[];
+}
+
+export default function MenuGrid({ 
+  activeCategory, 
+  setActiveCategory, 
+  addToCart, 
+  searchTerm,
+  inventory 
+}: MenuGridProps) {
+
+  const filteredItems = inventory.filter(item => {
     const matchesCategory = activeCategory === "All" || item.category === activeCategory;
     const matchesSearch = item.name.toLowerCase().includes(searchTerm.toLowerCase());
     return matchesCategory && matchesSearch;
   });
 
   return (
-    <div className="flex-1 flex flex-col h-full bg-white overflow-hidden">
-      <div className="p-8 pb-4 bg-white z-20"> 
-        <div className="flex gap-4 mb-6 overflow-x-auto no-scrollbar">
-          {CATEGORIES.map((cat) => (
-            <button
-              key={cat}
-              onClick={() => setActiveCategory(cat)}
-              className={`flex flex-col items-center justify-center min-w-[100px] py-3 px-4 rounded-2xl border transition-all ${
-                activeCategory === cat 
-                  ? "bg-[#244F61] text-white border-[#244F61] shadow-md" 
-                  : "bg-white border-[#D9EAF3] text-gray-500 hover:border-[#6297A1]"
-              }`}
-            >
-              <span className="text-[10px] font-black uppercase tracking-widest">{cat}</span>
-            </button>
-          ))}
-        </div>
-        <h2 className="text-2xl font-black text-[#1B3B48]">Choose Items</h2>
+    <main className="flex-1 flex flex-col p-3 sm:p-6 md:p-8 overflow-hidden bg-[#F8FBFE]">
+      {/* Responsive Category Header: Scrollable on mobile, wrap on desktop */}
+      <div className="flex overflow-x-auto pb-2 sm:pb-0 sm:flex-wrap items-center gap-2 mb-6 md:mb-8 no-scrollbar">
+        {CATEGORIES.map((cat) => (
+          <button
+            key={cat}
+            onClick={() => setActiveCategory(cat)}
+            className={`px-4 sm:px-6 py-2 rounded-xl font-bold transition-all text-xs sm:text-sm shadow-sm whitespace-nowrap ${
+              activeCategory === cat 
+                ? "bg-[#1B3B48] text-white scale-105" 
+                : "bg-white text-gray-500 hover:bg-[#6297A1]/10 border border-[#D9EAF3]"
+            }`}
+          >
+            {cat}
+          </button>
+        ))}
       </div>
 
-      <div className="flex-1 overflow-y-auto px-8 pb-10 no-scrollbar">
-        {/* Render filtered items */}
-        <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
-          {filteredItems.map((item) => (
-            <div key={item.id} className="group bg-white border border-[#6297A1]/10 rounded-[32px] p-5 hover:shadow-xl transition-all flex flex-col items-center text-center">
-              <div className="relative w-28 h-28 mb-3">
-                <Image 
-                  src={item.image} 
-                  alt={item.name} 
-                  fill 
-                  className="object-contain group-hover:scale-110 transition-transform" 
-                />
+      {/* Responsive Food Grid: 1 column on tiny phones, 2 on mobile, 3 on tablet, 4+ on large screens */}
+      <div className="flex-1 overflow-y-auto pr-1 no-scrollbar">
+        <div className="grid grid-cols-1 xs:grid-cols-2 md:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5 gap-3 sm:gap-4 md:gap-6 pb-24 lg:pb-8">
+          {filteredItems.map((item) => {
+            const isOutOfStock = item.stock <= 0;
+            
+            return (
+              <div 
+                key={item.id} 
+                className={`group bg-white rounded-2xl sm:rounded-3xl p-3 border border-[#D9EAF3] hover:border-[#6297A1] hover:shadow-xl transition-all relative flex flex-col ${
+                  isOutOfStock ? "opacity-60 grayscale-[0.5]" : ""
+                }`}
+              >
+                {/* Stock Badge */}
+                <div className={`absolute top-2 left-2 z-10 px-2 py-0.5 rounded-lg text-[9px] font-bold border ${
+                  isOutOfStock 
+                    ? "bg-red-50 text-red-500 border-red-100" 
+                    : "bg-[#6297A1]/10 text-[#6297A1] border-[#6297A1]/20"
+                }`}>
+                  {isOutOfStock ? "SOLD OUT" : `${item.stock} left`}
+                </div>
+
+                <div className="relative w-full aspect-square mb-3 sm:mb-4 rounded-xl sm:rounded-2xl overflow-hidden bg-[#F0F5F9]">
+                  <Image 
+                    src={item.image} 
+                    alt={item.name} 
+                    fill 
+                    className="object-cover group-hover:scale-110 transition-transform duration-500" 
+                  />
+                </div>
+                
+                <div className="flex flex-col flex-1">
+                  <h3 className="font-bold text-[#1B3B48] text-xs sm:text-sm md:text-base mb-1 line-clamp-1 sm:line-clamp-2">
+                    {item.name}
+                  </h3>
+                  <div className="mt-auto flex items-center justify-between pt-1 sm:pt-2">
+                    <span className="font-black text-[#6297A1] text-sm sm:text-base md:text-lg">
+                      ₦{item.price.toLocaleString()}
+                    </span>
+                    <button 
+                      disabled={isOutOfStock}
+                      onClick={() => addToCart(item)}
+                      className={`p-1.5 sm:p-2 rounded-lg sm:rounded-xl transition-all active:scale-90 ${
+                        isOutOfStock 
+                          ? "bg-gray-100 text-gray-400" 
+                          : "bg-[#1B3B48] text-white hover:bg-[#6297A1]"
+                      }`}
+                    >
+                      <Plus size={18} className="sm:w-5 sm:h-5" />
+                    </button>
+                  </div>
+                </div>
               </div>
-              <h3 className="font-bold text-base text-[#1B3B48] mb-1 truncate w-full">{item.name}</h3>
-              <p className="text-[10px] text-gray-400 mb-4 leading-tight line-clamp-2">
-                Freshly prepared with premium local ingredients.
-              </p>
-              <div className="w-full flex justify-between items-center mt-auto">
-                <span className="text-lg font-black text-[#1B3B48]">₦{item.price.toLocaleString()}</span>
-                <button 
-                  onClick={() => addToCart(item)}
-                  className="bg-[#1B3B48] text-white p-2 rounded-xl hover:bg-[#6297A1] shadow-lg active:scale-90 transition-all"
-                >
-                  <Plus size={20} />
-                </button>
-              </div>
-            </div>
-          ))}
+            );
+          })}
         </div>
       </div>
-    </div>
+    </main>
   );
 }

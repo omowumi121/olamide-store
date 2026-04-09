@@ -14,7 +14,7 @@ interface BillSidebarProps {
   cart: CartItem[];
   updateQuantity: (id: number, delta: number) => void;
   clearCart: () => void;
-  handlePlaceOrder: () => void; // ADDED THIS
+  handlePlaceOrder: () => void;
   isOpen: boolean;
   setIsOpen: (open: boolean) => void;
 }
@@ -23,7 +23,7 @@ export default function BillSidebar({
   cart = [], 
   updateQuantity, 
   clearCart, 
-  handlePlaceOrder, // DESTRUCTURED HERE
+  handlePlaceOrder,
   isOpen, 
   setIsOpen 
 }: BillSidebarProps) {
@@ -91,6 +91,7 @@ export default function BillSidebar({
         </div>
 
         <div className="mt-6 pt-6 border-t border-[#D9EAF3] space-y-3">
+          {/* Totals Section */}
           <div className="flex justify-between text-sm text-gray-500">
             <span>Sub Total</span> 
             <span className="font-semibold text-[#1B3B48]">₦{subTotal.toLocaleString()}</span>
@@ -104,9 +105,10 @@ export default function BillSidebar({
             <span className="text-[#6297A1]">₦{total.toLocaleString()}</span>
           </div>
 
+          {/* Action Buttons */}
           <div className="flex flex-col gap-2 mt-2">
             <button 
-              onClick={handlePlaceOrder} // CONNECTED TO ACTION
+              onClick={handlePlaceOrder}
               disabled={cart.length === 0} 
               className="w-full bg-[#1B3B48] text-white py-3 md:py-4 rounded-2xl font-bold transition hover:bg-[#244F61] shadow-lg active:scale-95 disabled:opacity-50"
             >
@@ -114,9 +116,9 @@ export default function BillSidebar({
             </button>
             
             <button 
-              onClick={clearCart}
+              onClick={clearCart} // THIS NOW TRIGGERS THE CONFIRMATION IN page.tsx
               disabled={cart.length === 0}
-              className="w-full flex items-center justify-center gap-2 bg-white border border-red-200 text-red-500 py-3 rounded-2xl font-bold transition hover:bg-red-50 active:scale-95 disabled:opacity-0"
+              className="w-full flex items-center justify-center gap-2 bg-white border border-red-200 text-red-500 py-3 rounded-2xl font-bold transition hover:bg-red-50 active:scale-95 disabled:opacity-50"
             >
               <RotateCcw size={16} />
               Cancel Order

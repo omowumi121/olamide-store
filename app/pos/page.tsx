@@ -3,17 +3,15 @@ import { useState, useEffect } from "react";
 import { ShoppingCart } from "lucide-react";
 import MenuGrid from "./ui/MenuGrid";
 import BillSidebar from "./ui/BillSidebar";
-import { MENU_ITEMS, Product } from "./data"; // Ensure Product interface is exported from data.ts
+import { MENU_ITEMS, Product } from "./data"; 
 
 export default function POSPage({ searchTerm = "" }) {
   const [cart, setCart] = useState<any[]>([]);
   const [activeCategory, setActiveCategory] = useState("All");
   const [isCartOpen, setIsCartOpen] = useState(false);
   
-  // 1. New State for Inventory
   const [inventory, setInventory] = useState<Product[]>([]);
 
-  // 2. Initialize Inventory and persistent data on mount
   useEffect(() => {
     const savedInventory = localStorage.getItem("olamide_inventory");
     if (savedInventory) {
@@ -25,7 +23,6 @@ export default function POSPage({ searchTerm = "" }) {
   }, []);
 
   const addToCart = (item: any) => {
-    // Check if stock is available
     const productInInventory = inventory.find(p => p.id === item.id);
     if (!productInInventory || productInInventory.stock <= 0) {
       alert("Item is out of stock!");
@@ -35,7 +32,6 @@ export default function POSPage({ searchTerm = "" }) {
     setCart((prev) => {
       const exists = prev.find((i) => i.id === item.id);
       if (exists) {
-        // Prevent adding more than available stock
         if (exists.qty >= productInInventory.stock) {
           alert("Maximum stock reached!");
           return prev;
@@ -53,7 +49,6 @@ export default function POSPage({ searchTerm = "" }) {
       if (i.id === id) {
         const newQty = i.qty + delta;
         
-        // Stock check for increasing quantity
         if (delta > 0 && productInInventory && newQty > productInInventory.stock) {
           alert("Cannot exceed available stock!");
           return i;
@@ -72,17 +67,14 @@ export default function POSPage({ searchTerm = "" }) {
     }
   };
 
-  // 3. ADDED: Handle Payment and Order Completion
   const handlePlaceOrder = () => {
     if (cart.length === 0) return;
 
-    // Simulate Payment Confirmation
     const totalAmount = cart.reduce((sum, item) => sum + (item.price * item.qty), 0);
     const tax = totalAmount * 0.10;
     const finalTotal = totalAmount + tax;
 
     if (window.confirm(`Confirm payment of ₦${finalTotal.toLocaleString()}?`)) {
-      // Create Order Record
       const newOrder = {
         orderId: `ORD-${Date.now()}`,
         items: cart,
@@ -90,11 +82,9 @@ export default function POSPage({ searchTerm = "" }) {
         timestamp: new Date().toISOString(),
       };
 
-      // Update Order History in LocalStorage
       const existingOrders = JSON.parse(localStorage.getItem("olamide_orders") || "[]");
       localStorage.setItem("olamide_orders", JSON.stringify([newOrder, ...existingOrders]));
 
-      // 4. Update Inventory Stock Levels
       const updatedInventory = inventory.map(product => {
         const soldItem = cart.find(c => c.id === product.id);
         if (soldItem) {
@@ -106,9 +96,8 @@ export default function POSPage({ searchTerm = "" }) {
       setInventory(updatedInventory);
       localStorage.setItem("olamide_inventory", JSON.stringify(updatedInventory));
 
-      // Reset Cart and UI
       setCart([]);
-      setIsCartOpen(false);
+      setIsCartOpen(false); // Ensures drawer closes on mobile after success
       alert("Order successfully placed and payment processed!");
     }
   };
@@ -120,7 +109,6 @@ export default function POSPage({ searchTerm = "" }) {
         setActiveCategory={setActiveCategory} 
         addToCart={addToCart} 
         searchTerm={searchTerm}
-        // Pass the live inventory to the grid to show remaining stock
         inventory={inventory} 
       />
 
@@ -128,12 +116,11 @@ export default function POSPage({ searchTerm = "" }) {
         cart={cart} 
         updateQuantity={updateQuantity} 
         clearCart={clearCart}
-        handlePlaceOrder={handlePlaceOrder} // NEW PROP
+        handlePlaceOrder={handlePlaceOrder} 
         isOpen={isCartOpen} 
         setIsOpen={setIsCartOpen} 
       />
 
-      {/* Mobile Floating Cart Button */}
       <button 
         onClick={() => setIsCartOpen(true)}
         className="fixed bottom-8 right-8 lg:hidden bg-[#1B3B48] text-white p-4 rounded-full shadow-2xl z-40"
